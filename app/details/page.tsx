@@ -18,11 +18,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { toast } from "@/components/ui/use-toast"
 
 export default function PersonalDetails() {
-  const [goals, setGoals] = useState([
-    { name: "Emergency Fund", target: 10000, timeframe: "1 year" }
-  ]);
-  const [newGoal, setNewGoal] = useState({ name: "", target: "", timeframe: "" });
-  
   // Calculate income stability score based on job type
   const calculateStabilityScore = (jobType) => {
     const scores = {
@@ -121,27 +116,17 @@ export default function PersonalDetails() {
       ...data,
       annualizedIncome: annual,
       savingsRate: savings.rate,
-      stabilityScore: stability,
-      financialGoals: goals
+      stabilityScore: stability
     });
   }
 
-  const addGoal = () => {
-    if (newGoal.name && newGoal.target && newGoal.timeframe) {
-      setGoals([...goals, { 
-        name: newGoal.name, 
-        target: parseFloat(newGoal.target), 
-        timeframe: newGoal.timeframe 
-      }]);
-      setNewGoal({ name: "", target: "", timeframe: "" });
-    }
-  };
-
-  const handleGoalChange = (e) => {
-    const { name, value } = e.target;
-    setNewGoal({
-      ...newGoal,
-      [name]: value
+  // Handle Add Goal button click
+  const handleAddGoal = () => {
+    // Here you would connect to your existing backend code
+    console.log("Add Goal button clicked - connect to backend code");
+    toast({
+      title: "Add Financial Goal",
+      description: "Opening goal creation interface...",
     });
   };
 
@@ -183,9 +168,19 @@ export default function PersonalDetails() {
             {/* Personal Tab */}
             <TabsContent value="personal" className="space-y-4">
               <Card>
-                <CardHeader>
-                  <CardTitle>Personal Details</CardTitle>
-                  <CardDescription>Enter your basic information</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Personal Details</CardTitle>
+                    <CardDescription>Enter your basic information</CardDescription>
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={handleAddGoal}
+                  >
+                    <Goal className="mr-2 h-4 w-4" />
+                    Add Financial Goal
+                  </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -586,83 +581,6 @@ export default function PersonalDetails() {
               </Card>
             </TabsContent>
           </Tabs>
-          
-          {/* Financial Goals Section */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Financial Goals</CardTitle>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                >
-                  <Goal className="mr-2 h-4 w-4" />
-                  Manage Goals
-                </Button>
-              </div>
-              <CardDescription>Set your financial targets</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {goals.map((goal, index) => (
-                  <div key={index} className="rounded-lg border p-4">
-                    <h4 className="font-medium">{goal.name}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Target: ${goal.target.toLocaleString()} • Timeframe: {goal.timeframe}
-                    </p>
-                  </div>
-                ))}
-                
-                <div className="grid grid-cols-1 gap-4 rounded-lg border p-4 md:grid-cols-3">
-                  <div>
-                    <Label htmlFor="goalName">Goal Name</Label>
-                    <Input
-                      id="goalName"
-                      name="name"
-                      value={newGoal.name}
-                      onChange={handleGoalChange}
-                      placeholder="Retirement"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="goalTarget">Target Amount</Label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="goalTarget"
-                        name="target"
-                        value={newGoal.target}
-                        onChange={handleGoalChange}
-                        className="pl-8"
-                        placeholder="500000"
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="goalTimeframe">Timeframe</Label>
-                    <Input
-                      id="goalTimeframe"
-                      name="timeframe"
-                      value={newGoal.timeframe}
-                      onChange={handleGoalChange}
-                      placeholder="20 years"
-                    />
-                  </div>
-                </div>
-                
-                <Button
-                  type="button" 
-                  variant="outline"
-                  onClick={addGoal}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Goal
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
           
           <div className="flex justify-end">
             <Button type="submit">
