@@ -9,9 +9,53 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ExpenseChart } from "@/components/expense-chart"
 import { InvestmentTable } from "@/components/investment-table"
+import { AddGoalDialog } from "@/components/add-goal-dialog"
+
+interface Goal {
+  name: string
+  target: number
+  current: number
+  date: string
+  category: string
+  isRecurring: boolean
+  priority: number
+  interestRate: number
+}
 
 export default function Dashboard() {
   const [greeting, setGreeting] = useState("Good afternoon")
+  const [goals, setGoals] = useState<Goal[]>([
+    {
+      name: "New Car",
+      target: 15000,
+      current: 7500,
+      date: "Dec 2025",
+      category: "car",
+      isRecurring: true,
+      priority: 75,
+      interestRate: 5.5
+    },
+    {
+      name: "Vacation",
+      target: 3000,
+      current: 2100,
+      date: "Aug 2025",
+      category: "vacation",
+      isRecurring: false,
+      priority: 50,
+      interestRate: 0
+    },
+    {
+      name: "Home Down Payment",
+      target: 50000,
+      current: 12500,
+      date: "Jan 2027",
+      category: "home",
+      isRecurring: true,
+      priority: 100,
+      interestRate: 3.5
+    },
+  ])
 
   // In a real app, this would come from an API or state management
   const accounts = [
@@ -20,11 +64,28 @@ export default function Dashboard() {
     { name: "Emergency Fund", balance: 5000.0, type: "savings" },
   ]
 
-  const goals = [
-    { name: "New Car", target: 15000, current: 7500, date: "Dec 2025" },
-    { name: "Vacation", target: 3000, current: 2100, date: "Aug 2025" },
-    { name: "Home Down Payment", target: 50000, current: 12500, date: "Jan 2027" },
-  ]
+  const handleAddGoal = (goal: {
+    name: string
+    target: number
+    date: string
+    current: number
+    category: string
+    isRecurring: boolean
+    priority: number
+    interestRate: number
+  }) => {
+    setGoals([...goals, goal])
+  }
+
+  const getPriorityColor = (priority: number) => {
+    if (priority >= 75) return "text-red-500"
+    if (priority >= 50) return "text-yellow-500"
+    return "text-green-500"
+  }
+
+  const calculateProgress = (current: number, target: number) => {
+    return Math.min(Math.round((current / target) * 100), 100)
+  }
 
   return (
     <div className="flex-1 space-y-6 overflow-auto p-6">
@@ -61,10 +122,7 @@ export default function Dashboard() {
       <div>
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">Financial Goals</h3>
-          <Button variant="outline" size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Goal
-          </Button>
+          <AddGoalDialog onAddGoal={handleAddGoal} />
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {goals.map((goal) => (
@@ -72,10 +130,16 @@ export default function Dashboard() {
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium">{goal.name}</CardTitle>
-                  <Target className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-medium ${getPriorityColor(goal.priority)}`}>
+                      {goal.priority >= 75 ? "High" : goal.priority >= 50 ? "Medium" : "Low"} Priority
+                    </span>
+                    <Target className="h-4 w-4 text-muted-foreground" />
+                  </div>
                 </div>
                 <CardDescription>
                   Target: ${goal.target.toLocaleString()} by {goal.date}
+                  {goal.isRecurring && " • Recurring"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -83,10 +147,17 @@ export default function Dashboard() {
                   <span className="text-sm font-medium">${goal.current.toLocaleString()}</span>
                   <span className="text-sm text-muted-foreground">${goal.target.toLocaleString()}</span>
                 </div>
-                <Progress value={(goal.current / goal.target) * 100} className="mt-2" />
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {Math.round((goal.current / goal.target) * 100)}% complete
-                </p>
+                <Progress value={calculateProgress(goal.current, goal.target)} className="mt-2" />
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground">
+                    {calculateProgress(goal.current, goal.target)}% complete
+                  </p>
+                  {goal.interestRate > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      {goal.interestRate}% interest
+                    </p>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}

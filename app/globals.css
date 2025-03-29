@@ -77,8 +77,108 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
+/* Calendar Styles */
+.rdp {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: hsl(var(--primary));
+  --rdp-background-color: hsl(var(--background));
+  --rdp-accent-color-dark: hsl(var(--primary));
+  --rdp-background-color-dark: hsl(var(--background));
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  --rdp-outline-selected: 2px solid var(--rdp-accent-color);
+  --rdp-selected-color: hsl(var(--primary));
+  --rdp-selected-color-dark: hsl(var(--primary));
+  --rdp-today-color: hsl(var(--accent));
+  --rdp-today-color-dark: hsl(var(--accent));
+  --rdp-day-font-size: 16px;
+  --rdp-months-border-color: hsl(var(--border));
+  --rdp-months-background-color: hsl(var(--background));
+  --rdp-months-color: hsl(var(--foreground));
+  --rdp-weekday-color: hsl(var(--muted-foreground));
+  --rdp-weekday-font-size: 14px;
+  --rdp-month-font-size: 16px;
+  --rdp-month-font-weight: 500;
+  --rdp-nav-button-color: hsl(var(--foreground));
+  --rdp-nav-button-size: 32px;
+  --rdp-nav-button-background-color: transparent;
+  --rdp-nav-button-border: 1px solid hsl(var(--border));
+  --rdp-nav-button-hover-color: hsl(var(--accent));
+  --rdp-nav-button-hover-background-color: hsl(var(--accent));
+  --rdp-nav-button-active-color: hsl(var(--primary));
+  --rdp-nav-button-active-background-color: hsl(var(--primary));
+  --rdp-nav-button-disabled-color: hsl(var(--muted-foreground));
+  --rdp-nav-button-disabled-background-color: transparent;
+  --rdp-nav-button-disabled-border: 1px solid hsl(var(--border));
+  --rdp-nav-button-disabled-hover-color: hsl(var(--muted-foreground));
+  --rdp-nav-button-disabled-hover-background-color: transparent;
+  --rdp-nav-button-disabled-active-color: hsl(var(--muted-foreground));
+  --rdp-nav-button-disabled-active-background-color: transparent;
+  --rdp-day-hover-color: hsl(var(--accent));
+  --rdp-day-hover-background-color: hsl(var(--accent));
+  --rdp-day-focus-color: hsl(var(--primary));
+  --rdp-day-focus-background-color: hsl(var(--primary));
+  --rdp-day-focus-outline: 2px solid hsl(var(--primary));
+  --rdp-day-selected-color: hsl(var(--primary-foreground));
+  --rdp-day-selected-background-color: hsl(var(--primary));
+  --rdp-day-selected-hover-color: hsl(var(--primary-foreground));
+  --rdp-day-selected-hover-background-color: hsl(var(--primary));
+  --rdp-day-selected-focus-color: hsl(var(--primary-foreground));
+  --rdp-day-selected-focus-background-color: hsl(var(--primary));
+  --rdp-day-selected-focus-outline: 2px solid hsl(var(--primary));
+  --rdp-day-today-color: hsl(var(--accent-foreground));
+  --rdp-day-today-background-color: hsl(var(--accent));
+  --rdp-day-today-hover-color: hsl(var(--accent-foreground));
+  --rdp-day-today-hover-background-color: hsl(var(--accent));
+  --rdp-day-today-focus-color: hsl(var(--accent-foreground));
+  --rdp-day-today-focus-background-color: hsl(var(--accent));
+  --rdp-day-today-focus-outline: 2px solid hsl(var(--accent));
+  --rdp-day-disabled-color: hsl(var(--muted-foreground));
+  --rdp-day-disabled-background-color: transparent;
+  --rdp-day-disabled-hover-color: hsl(var(--muted-foreground));
+  --rdp-day-disabled-hover-background-color: transparent;
+  --rdp-day-disabled-focus-color: hsl(var(--muted-foreground));
+  --rdp-day-disabled-focus-background-color: transparent;
+  --rdp-day-disabled-focus-outline: 2px solid hsl(var(--muted-foreground));
+  --rdp-day-outside-color: hsl(var(--muted-foreground));
+  --rdp-day-outside-background-color: transparent;
+  --rdp-day-outside-hover-color: hsl(var(--muted-foreground));
+  --rdp-day-outside-hover-background-color: transparent;
+  --rdp-day-outside-focus-color: hsl(var(--muted-foreground));
+  --rdp-day-outside-focus-background-color: transparent;
+  --rdp-day-outside-focus-outline: 2px solid hsl(var(--muted-foreground));
+  --rdp-day-range-start-color: hsl(var(--primary-foreground));
+  --rdp-day-range-start-background-color: hsl(var(--primary));
+  --rdp-day-range-start-hover-color: hsl(var(--primary-foreground));
+  --rdp-day-range-start-hover-background-color: hsl(var(--primary));
+  --rdp-day-range-start-focus-color: hsl(var(--primary-foreground));
+  --rdp-day-range-start-focus-background-color: hsl(var(--primary));
+  --rdp-day-range-start-focus-outline: 2px solid hsl(var(--primary));
+  --rdp-day-range-end-color: hsl(var(--primary-foreground));
+  --rdp-day-range-end-background-color: hsl(var(--primary));
+  --rdp-day-range-end-hover-color: hsl(var(--primary-foreground));
+  --rdp-day-range-end-hover-background-color: hsl(var(--primary));
+  --rdp-day-range-end-focus-color: hsl(var(--primary-foreground));
+  --rdp-day-range-end-focus-background-color: hsl(var(--primary));
+  --rdp-day-range-end-focus-outline: 2px solid hsl(var(--primary));
+  --rdp-day-range-middle-color: hsl(var(--accent-foreground));
+  --rdp-day-range-middle-background-color: hsl(var(--accent));
+  --rdp-day-range-middle-hover-color: hsl(var(--accent-foreground));
+  --rdp-day-range-middle-hover-background-color: hsl(var(--accent));
+  --rdp-day-range-middle-focus-color: hsl(var(--accent-foreground));
+  --rdp-day-range-middle-focus-background-color: hsl(var(--accent));
+  --rdp-day-range-middle-focus-outline: 2px solid hsl(var(--accent));
+  --rdp-day-range-middle-outside-color: hsl(var(--muted-foreground));
+  --rdp-day-range-middle-outside-background-color: transparent;
+  --rdp-day-range-middle-outside-hover-color: hsl(var(--muted-foreground));
+  --rdp-day-range-middle-outside-hover-background-color: transparent;
+  --rdp-day-range-middle-outside-focus-color: hsl(var(--muted-foreground));
+  --rdp-day-range-middle-outside-focus-background-color: transparent;
+  --rdp-day-range-middle-outside-focus-outline: 2px solid hsl(var(--muted-foreground));
+  --rdp-day-hidden: invisible;
+}
