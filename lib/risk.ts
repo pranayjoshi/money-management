@@ -1,5 +1,8 @@
 // risk.ts
 
+import { db } from './firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
+
 interface FinancialGoals {
     [goal: string]: number; // goal name -> timeframe in years
   }
@@ -9,6 +12,18 @@ interface FinancialGoals {
     rawRiskScore: number;
     riskRating: number;
     riskCategory: string;
+  }
+  
+  interface RiskFactors {
+    name: string;
+    age: number;
+    income: number;
+    incomeStability: number;
+    monthlyExpenditure: number;
+    dependents: number;
+    debt: number;
+    medicalConditions: number;
+    financialGoals: { [goal: string]: number };
   }
   
   /**
@@ -116,6 +131,48 @@ interface FinancialGoals {
       riskRating,
       riskCategory: riskCategories[riskRating]
     };
+  }
+  
+  async function fetchRiskData(userId: string): Promise<RiskFactors | null> {
+    try {
+      const docRef = doc(db, "users", userId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        console.log("Risk Data:", data);
+
+        const riskFactors: RiskFactors = {
+          name: data.name,
+          age: data.age,
+          income: data.income,
+          incomeStability: data.incomeStability,
+          monthlyExpenditure: data.monthlyExpenditure,
+          dependents: data.dependants.children + data.dependants.grandparents + data.dependants.other + (data.dependants.spouse ? 1 : 0),
+          debt: data.debts.reduce((total: number, debt: any) => total + debt.amount, 0),
+          medicalConditions: data.medicalConditions ? 3 : 1, // Example logic for medical condition
+          financialGoals: data.financialGoals || {}
+        };
+
+        return riskFactors;
+      } else {
+        console.log("No such document!");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching document: ", error);
+      return null;
+    }
+  }
+
+  export async function getRiskFactor(userId: string): Promise<number> {
+    const data = await fetchRiskData(userId);
+    if (data) {
+      const riskFactor = calculateRiskFactor(data.name, data.age, data.income, data.incomeStability, data.monthlyExpenditure, data.dependents, data.debt, data.medicalConditions, data.financialGoals);
+      console.log("Calculated Risk Factor: ", riskFactor.rawRiskScore);
+      return riskFactor.rawRiskScore;
+    }
+    return 0; // Return a default value if data is not available
   }
   
   // Example usage

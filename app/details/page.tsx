@@ -20,8 +20,11 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig"
 
 export default function PersonalDetails() {
+  const [annualizedIncome, setAnnualizedIncome] = useState(0);
+  const [savingsInfo, setSavingsInfo] = useState({ monthly: 0, rate: "0.0" });
+  const [incomeStability, setincomeStability] = useState(5);
   // Calculate income stability score based on job type
-  const calculateStabilityScore = (jobType: string | number) => {
+  const calculateincomeStability = (jobType: string | number) => {
     const scores = {
       "full-time-permanent": 5,
       "full-time-contract": 4,
@@ -90,9 +93,7 @@ export default function PersonalDetails() {
     },
   });
 
-  const [annualizedIncome, setAnnualizedIncome] = useState(0);
-  const [savingsInfo, setSavingsInfo] = useState({ monthly: 0, rate: "0.0" });
-  const [stabilityScore, setStabilityScore] = useState(5);
+
 
   useEffect(() => {
     // Load data from Firestore
@@ -112,49 +113,46 @@ export default function PersonalDetails() {
   }, []);
 
   async function onSubmit(data: { incomeType: string; income: number; monthlyExpenditure: any; jobType: any }) {
-    console.log("AWdad")
     // Calculate annualized income
     const annual = data.incomeType === "monthly" ? data.income * 12 : data.income;
     setAnnualizedIncome(annual);
+
     // Calculate monthly income for savings calculation
     const monthlyIncome = data.incomeType === "monthly" ? data.income : data.income / 12;
     const savings = calculateSavings(monthlyIncome, data.monthlyExpenditure);
     setSavingsInfo(savings);
-    
+
     // Calculate stability score
-    const stability = calculateStabilityScore(data.jobType);
-    setStabilityScore(stability);
-    
-    // In a real app, you would send this data to your backend
+    const stability = calculateincomeStability(data.jobType);
+    setincomeStability(stability);
+
+    // Prepare data to be saved, including the stability score
+    const dataToSave = {
+        ...data,
+        annualizedIncome: annual,
+        savingsRate: savings.rate,
+        incomeStability: stability
+    };
 
     try {
-      // Save data to Firestore
-      await setDoc(doc(db, "users", "userId"), data); // Replace "userId" with the actual user ID
-      console.log("Awdawd")
-      toast({
-        title: "Profile updated",
-        description: "Your personal details have been saved successfully.",
-      });
+        // Save data to Firestore
+        console.log("wadaw")
+        await setDoc(doc(db, "users", "userId"), dataToSave); // Replace "userId" with the actual user ID
+        console.log("wadaw")
+        toast({
+            title: "Profile updated",
+            description: "Your personal details have been saved successfully.",
+        });
     } catch (error) {
-      console.error("Error saving document: ", error);
-      toast({
-        title: "Error",
-        description: "There was an error saving your profile.",
-      });
+        console.error("Error saving document: ", error);
+        toast({
+            title: "Error",
+            description: "There was an error saving your profile.",
+        });
     }
 
-    toast({
-      title: "Profile updated",
-      description: "Your personal details have been saved successfully.",
-    });
-    
-    console.log({
-      ...data,
-      annualizedIncome: annual,
-      savingsRate: savings.rate,
-      stabilityScore: stability
-    });
-  }
+    console.log(dataToSave);
+}
 
   // Handle Add Goal button click
   const handleAddGoal = () => {
@@ -390,12 +388,12 @@ export default function PersonalDetails() {
                           </CardHeader>
                           <CardContent>
                             <div className="text-2xl font-bold">
-                              {stabilityScore}/5
+                              {incomeStability}/5
                             </div>
                             <p className="text-xs text-muted-foreground">
-                              {stabilityScore >= 4 ? "Very Stable" : 
-                               stabilityScore >= 3 ? "Stable" : 
-                               stabilityScore >= 2 ? "Moderate" : "Unstable"}
+                              {incomeStability >= 4 ? "Very Stable" : 
+                               incomeStability >= 3 ? "Stable" : 
+                               incomeStability >= 2 ? "Moderate" : "Unstable"}
                             </p>
                           </CardContent>
                         </Card>
