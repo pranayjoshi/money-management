@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Bell, CreditCard, DollarSign, Home, PieChart, Settings, User } from "lucide-react"
+import { Bell, CreditCard, DollarSign, Home, LineChart, PieChart, Settings, User } from "lucide-react"
 import Link from "next/link"
 import "@/styles/globals.css"
 
@@ -35,6 +35,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             >
               <PieChart className="h-5 w-5" />
               Analytics
+            </Link>
+            <Link
+              href="/strategy"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-primary"
+            >
+              <LineChart className="h-5 w-5" />
+              Strategy
             </Link>
             <Link
               href="/transactions"
