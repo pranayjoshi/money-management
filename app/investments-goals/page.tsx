@@ -17,7 +17,7 @@ export default function InvestmentsGoalsContent() {
         title: string;
         total_val: number;
         current_val: number;
-        date: string;
+        expected_time: string;
         category: string;
         isRecurring: boolean;
         priority: number;

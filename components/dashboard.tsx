@@ -20,7 +20,7 @@ interface Goal {
   title: string
   total_val: number
   current_val: number
-  date: string
+  expected_time: string
   category: string
   isRecurring: boolean
   priority: number
@@ -45,7 +45,7 @@ export default function Dashboard() {
             title: goal.name || goal.title,
             total_val: goal.target || goal.total_val,
             current_val: goal.current || goal.current_val,
-            date: goal.date,
+            expected_time: goal.expected_time,
             category: goal.category,
             isRecurring: goal.isRecurring,
             priority: goal.priority,
@@ -81,7 +81,7 @@ export default function Dashboard() {
           goals: [...currentGoals, goal]
         })
         
-        // Update local state after successful Firestore update
+        // Upex local state after successful Firestore upex
         setGoals(prevGoals => [...prevGoals, goal])
       } else {
         // If document doesn't exist, create it with the first goal
@@ -157,7 +157,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <CardDescription>
-                  Target: ${goal.total_val.toLocaleString()} by {goal.date}
+                  Target: ${goal.total_val.toLocaleString()} by {goal.expected_time}
                   {goal.isRecurring && " • Recurring"}
                 </CardDescription>
               </CardHeader>

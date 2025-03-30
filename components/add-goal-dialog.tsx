@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState } from "react"
 import { Target, Landmark, Percent, AlertCircle } from "lucide-react"
@@ -29,13 +29,13 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 interface AddGoalDialogProps {
     onAddGoal: (goal: {
         title: string
-        total_val: number
-        current_val: number
-        date: string
-        category: string
-        isRecurring: boolean
-        priority: number
-        interestRate: number
+  total_val: number
+  current_val: number
+  expected_time: string
+  category: string
+  isRecurring: boolean
+  priority: number
+  interestRate: number
     }) => void
 }
 
@@ -88,12 +88,12 @@ export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
         onAddGoal({
             title: goalName,
             total_val: parseFloat(goalAmount),
+            expected_time: `${selectedMonth} ${selectedYear}`,
             current_val: parseFloat(initialDeposit) || 0,
-            date: `${selectedMonth} ${selectedYear}`,
+            interestRate: parseFloat(interestRate),
             category: goalCategory,
             isRecurring,
-            priority,
-            interestRate: parseFloat(interestRate)
+            priority
         })
 
         resetForm()
@@ -307,4 +307,4 @@ export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
             </DialogContent>
         </Dialog>
     )
-} 
+}

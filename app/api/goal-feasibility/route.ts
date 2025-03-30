@@ -7,6 +7,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
     try {
+        console.log("open")
         const { targetAmount, initialDeposit, interestRate, monthYear } = await req.json()
 
         // Create a prompt for the AI to analyze goal feasibility
