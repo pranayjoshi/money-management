@@ -1,5 +1,5 @@
 "use client"
-import { Download, Filter, Plus } from "lucide-react"
+import { Bot, Download, Filter, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -73,14 +73,19 @@ export default function InvestmentsGoalsContent() {
       <div className="grid gap-4 md:grid-cols-3">
         {/* AI Investment Suggestions */}
         <Card>
-          <CardHeader>
-            <CardTitle>AI Investment Suggestions</CardTitle>
-            <CardDescription>Personalized investment recommendations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AIInvestmentSuggestions />
-          </CardContent>
-        </Card>
+    <CardHeader className="flex justify-end gap-2">
+      <div className="flex justify-between gap-2">
+      <div>
+        <CardTitle>AI Investment Suggestions</CardTitle>
+        <CardDescription>Personalized investment recommendations</CardDescription>
+      </div>
+      <Bot className="h-10 w-10 text-primary" /> {/* Generative AI Logo */}
+      </div>
+    </CardHeader>
+    <CardContent>
+      <AIInvestmentSuggestions />
+    </CardContent>
+  </Card>
 
         {/* Investment Table */}
         <Card>
