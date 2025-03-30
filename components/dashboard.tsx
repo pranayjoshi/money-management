@@ -11,6 +11,8 @@ import { ExpenseChart } from "@/components/expense-chart"
 import { InvestmentTable } from "@/components/investment-table"
 import { AddGoalDialog } from "@/components/add-goal-dialog"
 import UserForm from "./pushtofb"
+import { FundBifurcation } from "./fund-bifurcation"
+import { ExpenseBreakdown } from "./expense-breakdown"
 
 interface Goal {
   name: string
@@ -195,15 +197,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Monthly Expenses */}
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Monthly Expenses</CardTitle>
-            <CardDescription>Your spending breakdown for May 2025</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ExpenseChart />
-          </CardContent>
-        </Card>
+        <ExpenseBreakdown />
       </div>
     </div>
   )
