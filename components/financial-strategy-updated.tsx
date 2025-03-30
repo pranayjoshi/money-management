@@ -25,26 +25,26 @@ export function FinancialStrategy() {
             current: true,
             icon: <Coins className="h-5 w-5" />,
             fundData: [
-                { name: "Emergency Fund", target: 5000, current: 1000 },
-                { name: "Checking", target: 1500, current: 1500 },
-                { name: "Savings", target: 3000, current: 500 },
+                { name: "Emergency Fund", target: 2000, current: 350 },
+                { name: "Checking", target: 750, current: 400 },
+                { name: "Savings", target: 1000, current: 200 },
             ],
             creditCards: [
-                {
-                    name: "Chase Freedom Student",
-                    perks: ["No annual fee", "1% cash back", "For students"],
-                    image: "/api/placeholder/300/180"
-                },
                 {
                     name: "Discover it® Student",
                     perks: ["No annual fee", "5% rotating categories", "Cashback match first year"],
                     image: "/api/placeholder/300/180"
+                },
+                {
+                    name: "Chase Freedom Student",
+                    perks: ["No annual fee", "1% cash back", "No credit history needed"],
+                    image: "/api/placeholder/300/180"
                 }
             ],
             tips: [
-                "Start with 1 month of expenses in emergency fund",
-                "Pay off credit cards in full monthly",
-                "Set up automatic savings transfers on payday"
+                "Start with just $500 in emergency fund",
+                "Set up direct deposit for your paychecks",
+                "Always pay cards in full to avoid interest"
             ]
         },
         {
@@ -55,88 +55,90 @@ export function FinancialStrategy() {
             completed: false,
             icon: <Ban className="h-5 w-5" />,
             debts: [
-                { name: "Credit Card", balance: 3500, interestRate: 18.99, payment: 100, priority: 1 },
-                { name: "Student Loan", balance: 15000, interestRate: 5.8, payment: 200, priority: 2 },
-                { name: "Car Loan", balance: 9000, interestRate: 4.5, payment: 350, priority: 3 },
+                { name: "Credit Card", balance: 850, interestRate: 19.99, payment: 50, priority: 1 },
+                { name: "Student Loan", balance: 12500, interestRate: 4.5, payment: 150, priority: 2 },
+                { name: "Phone Payment", balance: 600, interestRate: 0, payment: 25, priority: 3 },
             ],
             debtDistribution: [
-                { name: "Credit Card", value: 3500, fill: "#ff8c00" },
-                { name: "Student Loan", value: 15000, fill: "#8884d8" },
-                { name: "Car Loan", value: 9000, fill: "#82ca9d" },
+                { name: "Credit Card", value: 850, fill: "#ff8c00" },
+                { name: "Student Loan", value: 12500, fill: "#8884d8" },
+                { name: "Phone Payment", value: 600, fill: "#82ca9d" },
             ],
             payoffData: [
-                { name: "$0 Extra", months: 42, interest: 3900 },
-                { name: "$50 Extra", months: 27, interest: 2400 },
-                { name: "$100 Extra", months: 20, interest: 1800 },
-                { name: "$200 Extra", months: 13, interest: 1200 },
+                { name: "$50 Min", months: 21, interest: 270 },
+                { name: "$75 Extra", months: 12, interest: 150 },
+                { name: "$100 Extra", months: 9, interest: 110 },
+                { name: "$150 Extra", months: 6, interest: 75 },
             ],
             tips: [
-                "Pay minimums on all debts",
-                "Focus extra on highest-interest debt",
-                "Avoid taking on new debt"
+                "Pay off high-interest credit card first",
+                "Make at least minimum payments on all debts",
+                "Consider income-based repayment for student loans"
             ]
         },
         {
             id: 3,
             title: "Investing Future",
-            subtitle: "Grow your wealth",
-            description: "Build wealth through strategic investments",
+            subtitle: "Start early, grow steadily",
+            description: "Begin building wealth through smart investments",
             completed: false,
             icon: <TrendingUp className="h-5 w-5" />,
             allocationData: [
-                { name: "Stocks (70%)", value: 70, fill: "#8884d8" },
-                { name: "Bonds (20%)", value: 20, fill: "#82ca9d" },
+                { name: "Stocks (80%)", value: 80, fill: "#8884d8" },
+                { name: "Bonds (10%)", value: 10, fill: "#82ca9d" },
                 { name: "Cash (10%)", value: 10, fill: "#ffc658" }
             ],
             growthData: [
                 { year: 0, value: 0 },
-                { year: 5, value: 38600 },
-                { year: 10, value: 91400 },
-                { year: 15, value: 163400 },
-                { year: 20, value: 262900 },
-                { year: 25, value: 401300 },
-                { year: 30, value: 599800 },
+                { year: 5, value: 3600 },
+                { year: 10, value: 9800 },
+                { year: 15, value: 19500 },
+                { year: 20, value: 34200 },
+                { year: 25, value: 56300 },
+                { year: 30, value: 89700 },
+                { year: 40, value: 228600 },
             ],
             compareData: [
+                { amount: "$50/mo", years10: 8600, years20: 24700, years30: 56800 },
                 { amount: "$100/mo", years10: 17300, years20: 49400, years30: 113600 },
-                { amount: "$300/mo", years10: 51900, years20: 148200, years30: 340800 },
-                { amount: "$500/mo", years10: 86500, years20: 247000, years30: 568000 },
+                { amount: "$200/mo", years10: 34600, years20: 98800, years30: 227200 },
             ],
             tips: [
-                "Start early to benefit from compound growth",
-                "Diversify across different asset classes",
-                "Focus on low-fee investments"
+                "Start with just $25-50/month in investments",
+                "Use your employer's 401(k) match if available",
+                "Consider a Roth IRA for tax-free growth"
             ]
         },
         {
             id: 4,
             title: "Comfortable Life",
-            subtitle: "Enjoy the rewards",
-            description: "Optimize finances to enjoy life now and later",
+            subtitle: "Balance today and tomorrow",
+            description: "Live well while building for the future",
             completed: false,
             icon: <HeartHandshake className="h-5 w-5" />,
             progressData: [
-                { name: "Roth IRA", target: 6500, current: 2000 },
-                { name: "Taxes Paid", target: 12500, current: 7500 },
-                { name: "Vacation Fund", target: 3000, current: 1500 },
-                { name: "Giving", target: 5000, current: 750 },
+                { name: "Roth IRA", target: 3000, current: 500 },
+                { name: "Taxes Saved", target: 1200, current: 300 },
+                { name: "Travel Fund", target: 1500, current: 200 },
+                { name: "Education", target: 1000, current: 150 },
             ],
             milestoneData: [
-                { category: "Home", timeline: "5-7 yrs", complete: 30, milestones: 3 },
-                { category: "Retirement", timeline: "25 yrs", complete: 15, milestones: 3 },
-                { category: "Travel", timeline: "Ongoing", complete: 40, milestones: 3 },
+                { category: "First Car", timeline: "1-2 yrs", complete: 25, milestones: 3 },
+                { category: "Education", timeline: "2-4 yrs", complete: 15, milestones: 3 },
+                { category: "Travel", timeline: "Ongoing", complete: 10, milestones: 3 },
             ],
             spendingData: [
-                { name: "Housing", value: 40 },
+                { name: "Housing", value: 30 },
                 { name: "Food", value: 15 },
                 { name: "Transport", value: 10 },
-                { name: "Savings", value: 20 },
-                { name: "Other", value: 15 },
+                { name: "Savings", value: 15 },
+                { name: "Education", value: 15 },
+                { name: "Fun", value: 15 },
             ],
             tips: [
-                "Balance living well today with saving for tomorrow",
-                "Review financial plan annually and adjust",
-                "Keep learning about personal finance"
+                "Build the 50/30/20 budget (needs/wants/savings)",
+                "Allow yourself small rewards for financial wins",
+                "Use apps to automate savings and track spending"
             ]
         }
     ]
@@ -227,7 +229,7 @@ export function FinancialStrategy() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Recommended Credit Cards (20-30yr)</h4>
+                                    <h4 className="text-sm font-medium mb-3">Recommended First Credit Cards</h4>
                                     <div className="space-y-3">
                                         {stages[0].creditCards.map((card, index) => (
                                             <div key={index} className="border rounded-lg p-3 bg-card flex items-start gap-3">
@@ -252,8 +254,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Building a Strong Foundation</h4>
-                                <p className="text-xs">Focus on creating an emergency fund covering 3-6 months of expenses, opening no-fee checking and savings accounts, and establishing good credit with your first credit card. When applying for credit, consider student cards that offer cash back with no annual fees.</p>
+                                <h4 className="text-sm font-medium mb-2">Building Your First Financial Foundation</h4>
+                                <p className="text-xs">At 21, focus on starting small but consistent. Aim for a $500-1000 emergency fund first, open a free checking account for direct deposits, and apply for a student credit card to build credit. Use the card for small purchases and pay it off in full each month to avoid interest and build a positive credit history.</p>
                             </div>
                         </div>
                     )}
@@ -329,8 +331,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Debt Freedom Strategy</h4>
-                                <p className="text-xs">Focus on high-interest debt first (Avalanche Method) to minimize interest or smallest balance first (Snowball Method) for psychological wins. Adding just $100 extra monthly to your credit card payment can cut payoff time in half and save hundreds in interest.</p>
+                                <h4 className="text-sm font-medium mb-2">Smart Debt Management for Young Adults</h4>
+                                <p className="text-xs">Focus on keeping credit card balances low or zero to avoid high interest. For student loans, understand your grace period and repayment options. Even paying just $25 extra per month on your credit card can cut months off your payoff time and save on interest. Avoid taking on new debt while paying off existing balances.</p>
                             </div>
                         </div>
                     )}
@@ -400,8 +402,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Investment Strategy</h4>
-                                <p className="text-xs">Start with tax-advantaged accounts like 401(k)s and IRAs. For most young investors, a portfolio weighted toward stock index funds provides the best long-term growth potential. The power of compounding means that starting early, even with small amounts, can lead to significant wealth over time.</p>
+                                <h4 className="text-sm font-medium mb-2">Early Investing Strategy</h4>
+                                <p className="text-xs">Starting to invest at 21 gives you a tremendous advantage, even with small amounts. Begin with just $25-50 monthly in a simple index fund through a Roth IRA. If your employer offers 401(k) matching, contribute enough to get the full match—it's free money. Your greatest asset is time, so a higher allocation to stocks is appropriate at your age.</p>
                             </div>
                         </div>
                     )}
@@ -471,8 +473,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Balanced Living Strategy</h4>
-                                <p className="text-xs">The ultimate goal is to live well while securing your future. Max out tax-advantaged accounts like Roth IRAs and HSAs, keep major expenses (housing, transportation) reasonable, and build separate funds for short-term goals like travel. Remember that financial planning is a tool for a better life, not an end in itself.</p>
+                                <h4 className="text-sm font-medium mb-2">Balanced Living for Young Adults</h4>
+                                <p className="text-xs">Financial success isn't just about saving—it's about living well while preparing for the future. Try the 50/30/20 budget: 50% for needs, 30% for wants, and 20% for savings and debt repayment. Set up separate funds for goals like travel or education. Use budgeting apps to track spending, and automate savings to make good habits effortless.</p>
                             </div>
                         </div>
                     )}
