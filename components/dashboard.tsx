@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ExpenseChart } from "@/components/expense-chart"
 import { InvestmentTable } from "@/components/investment-table"
 import { AddGoalDialog } from "@/components/add-goal-dialog"
+import UserForm from "./pushtofb"
 
 interface Goal {
   name: string
@@ -99,6 +100,7 @@ export default function Dashboard() {
           Add Transaction
         </Button>
       </div>
+      {/* <UserForm /> */}
 
       {/* Accounts Summary */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

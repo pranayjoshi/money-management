@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Save, Plus, User, DollarSign, TrendingUp, HeartPulse, Users, Goal, BanknoteIcon } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -16,10 +16,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast"
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig"
 
 export default function PersonalDetails() {
   // Calculate income stability score based on job type
-  const calculateStabilityScore = (jobType) => {
+  const calculateStabilityScore = (jobType: string | number) => {
     const scores = {
       "full-time-permanent": 5,
       "full-time-contract": 4,
@@ -28,12 +30,12 @@ export default function PersonalDetails() {
       "self-employed": 3,
       "freelance": 2,
       "unemployed": 1
-    };
-    return scores[jobType] || 3;
+    } as const;
+    return scores[jobType as keyof typeof scores] || 3;
   };
 
   // Calculate savings rate
-  const calculateSavings = (income, expenditure) => {
+  const calculateSavings = (income: number, expenditure: number) => {
     const monthlyIncome = income;
     const savings = monthlyIncome - expenditure;
     const savingsRate = (savings / monthlyIncome) * 100;
@@ -92,11 +94,28 @@ export default function PersonalDetails() {
   const [savingsInfo, setSavingsInfo] = useState({ monthly: 0, rate: "0.0" });
   const [stabilityScore, setStabilityScore] = useState(5);
 
-  function onSubmit(data) {
+  useEffect(() => {
+    // Load data from Firestore
+    const loadData = async () => {
+      const docRef = doc(db, "users", "userId"); // Replace "userId" with the actual user ID
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        form.reset(data); // Load data into the form
+      } else {
+        console.log("No such document!");
+      }
+    };
+
+    loadData();
+  }, []);
+
+  async function onSubmit(data: { incomeType: string; income: number; monthlyExpenditure: any; jobType: any }) {
+    console.log("AWdad")
     // Calculate annualized income
     const annual = data.incomeType === "monthly" ? data.income * 12 : data.income;
     setAnnualizedIncome(annual);
-    
     // Calculate monthly income for savings calculation
     const monthlyIncome = data.incomeType === "monthly" ? data.income : data.income / 12;
     const savings = calculateSavings(monthlyIncome, data.monthlyExpenditure);
@@ -107,6 +126,23 @@ export default function PersonalDetails() {
     setStabilityScore(stability);
     
     // In a real app, you would send this data to your backend
+
+    try {
+      // Save data to Firestore
+      await setDoc(doc(db, "users", "userId"), data); // Replace "userId" with the actual user ID
+      console.log("Awdawd")
+      toast({
+        title: "Profile updated",
+        description: "Your personal details have been saved successfully.",
+      });
+    } catch (error) {
+      console.error("Error saving document: ", error);
+      toast({
+        title: "Error",
+        description: "There was an error saving your profile.",
+      });
+    }
+
     toast({
       title: "Profile updated",
       description: "Your personal details have been saved successfully.",
