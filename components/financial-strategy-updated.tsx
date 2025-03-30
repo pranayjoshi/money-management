@@ -122,10 +122,10 @@ export function FinancialStrategy() {
                 { name: "Phone Payment", value: 600, fill: "#82ca9d" },
             ],
             payoffData: [
-                { name: "$50 Min", months: 21, interest: 270 },
-                { name: "$75 Extra", months: 12, interest: 150 },
-                { name: "$100 Extra", months: 9, interest: 110 },
-                { name: "$150 Extra", months: 6, interest: 75 },
+                { name: "$380 Min", months: 96, interest: 9600 },
+                { name: "$100 Extra", months: 80, interest: 7900 },
+                { name: "$200 Extra", months: 69, interest: 6700 },
+                { name: "$300 Extra", months: 60, interest: 5700 },
             ],
             tips: [
                 "Pay off high-interest credit card first",
@@ -220,7 +220,7 @@ export function FinancialStrategy() {
                                 <button
                                     key={stage.id}
                                     onClick={() => setSelectedStage(stage.id)}
-                                    className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 text-xs font-semibold transition-colors
+                                    className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors
                     ${selectedStage === stage.id ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}
                     ${stage.completed ? "border-primary bg-primary text-primary-foreground" :
                                             stage.id === currentStage ? "border-primary bg-primary/20 text-primary" :
@@ -231,7 +231,7 @@ export function FinancialStrategy() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex justify-between px-1 text-xs text-muted-foreground">
+                    <div className="flex justify-between px-1 text-sm text-muted-foreground">
                         {stages.map((stage) => (
                             <div key={stage.id} className={`w-24 truncate text-center ${selectedStage === stage.id ? "text-primary font-medium" : ""}`}>
                                 {stage.title}
@@ -248,7 +248,7 @@ export function FinancialStrategy() {
                                 {stages[selectedStage - 1].icon}
                                 {stages[selectedStage - 1].title}
                             </h3>
-                            <p className="text-sm text-muted-foreground">{stages[selectedStage - 1].description}</p>
+                            <p className="text-base text-muted-foreground">{stages[selectedStage - 1].description}</p>
                         </div>
                         <Badge
                             className={`${selectedStage === currentStage ? "bg-blue-500/10 text-blue-500" : "bg-amber-500/10 text-amber-500"
@@ -263,19 +263,19 @@ export function FinancialStrategy() {
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Financial Goals Progress</h4>
+                                    <h4 className="text-base font-medium mb-3">Financial Goals Progress</h4>
                                     {stages[0].fundData.map((item, index) => (
                                         <div key={index} className="mb-3">
                                             <div className="flex justify-between mb-1">
-                                                <span className="text-sm">{item.name}</span>
-                                                <span className="text-xs text-muted-foreground">${item.current.toLocaleString()} / ${item.target.toLocaleString()}</span>
+                                                <span className="text-base">{item.name}</span>
+                                                <span className="text-sm text-muted-foreground">${item.current.toLocaleString()} / ${item.target.toLocaleString()}</span>
                                             </div>
                                             <Progress value={(item.current / item.target) * 100} className="h-2" />
                                         </div>
                                     ))}
 
-                                    <h4 className="text-sm font-medium mt-6 mb-2">Pro Tips</h4>
-                                    <ul className="text-xs space-y-1 ml-5 list-disc">
+                                    <h4 className="text-base font-medium mt-6 mb-2">Pro Tips</h4>
+                                    <ul className="text-sm space-y-1 ml-5 list-disc">
                                         {stages[0].tips.map((tip, i) => (
                                             <li key={i}>{tip}</li>
                                         ))}
@@ -283,7 +283,7 @@ export function FinancialStrategy() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Recommended First Credit Cards</h4>
+                                    <h4 className="text-base font-medium mb-3">Recommended First Credit Cards</h4>
                                     <div className="space-y-3">
                                         {stages[0].creditCards.map((card, index) => (
                                             <div key={index} className="border rounded-lg p-3 bg-card flex items-start gap-3">
@@ -291,8 +291,8 @@ export function FinancialStrategy() {
                                                     <CreditCard className="h-6 w-6 text-muted-foreground" />
                                                 </div>
                                                 <div>
-                                                    <h5 className="font-medium text-sm">{card.name}</h5>
-                                                    <ul className="text-xs mt-1">
+                                                    <h5 className="font-medium text-base">{card.name}</h5>
+                                                    <ul className="text-sm mt-1">
                                                         {card.perks.map((perk, i) => (
                                                             <li key={i} className="flex items-center">
                                                                 <div className="h-1 w-1 bg-primary rounded-full mr-1.5"></div>
@@ -308,8 +308,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Building Your First Financial Foundation</h4>
-                                <p className="text-xs">At 21, focus on starting small but consistent. Aim for a $500-1000 emergency fund first, open a free checking account for direct deposits, and apply for a student credit card to build credit. Use the card for small purchases and pay it off in full each month to avoid interest and build a positive credit history.</p>
+                                <h4 className="text-base font-medium mb-2">Building Your First Financial Foundation</h4>
+                                <p className="text-sm">At 21, focus on starting small but consistent. Aim for a $500-1000 emergency fund first, open a free checking account for direct deposits, and apply for a student credit card to build credit. Use the card for small purchases and pay it off in full each month to avoid interest and build a positive credit history.</p>
                             </div>
                         </div>
                     )}
@@ -319,7 +319,7 @@ export function FinancialStrategy() {
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Your Debt Breakdown</h4>
+                                    <h4 className="text-base font-medium mb-3">Your Debt Breakdown</h4>
                                     <div className="h-[200px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
@@ -342,9 +342,9 @@ export function FinancialStrategy() {
                                         </ResponsiveContainer>
                                     </div>
 
-                                    <h4 className="text-sm font-medium mt-2 mb-2">Debt Payoff Priority</h4>
+                                    <h4 className="text-base font-medium mt-2 mb-2">Debt Payoff Priority</h4>
                                     {stages[1].debts.map((debt, index) => (
-                                        <div key={index} className="flex items-center justify-between text-xs mb-2">
+                                        <div key={index} className="flex items-center justify-between text-sm mb-2">
                                             <div className="flex items-center">
                                                 <Badge variant={index === 0 ? "default" : "outline"} className="mr-2">
                                                     {index + 1}
@@ -360,7 +360,7 @@ export function FinancialStrategy() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Extra Payment Impact (Credit Card)</h4>
+                                    <h4 className="text-base font-medium mb-3">Extra Payment Impact</h4>
                                     <div className="h-[180px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={stages[1].payoffData}>
@@ -375,8 +375,8 @@ export function FinancialStrategy() {
                                         </ResponsiveContainer>
                                     </div>
 
-                                    <h4 className="text-sm font-medium mt-6 mb-2">Pro Tips</h4>
-                                    <ul className="text-xs space-y-1 ml-5 list-disc">
+                                    <h4 className="text-base font-medium mt-6 mb-2">Pro Tips</h4>
+                                    <ul className="text-sm space-y-1 ml-5 list-disc">
                                         {stages[1].tips.map((tip, i) => (
                                             <li key={i}>{tip}</li>
                                         ))}
@@ -385,8 +385,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Smart Debt Management for Young Adults</h4>
-                                <p className="text-xs">Focus on keeping credit card balances low or zero to avoid high interest. For student loans, understand your grace period and repayment options. Even paying just $25 extra per month on your credit card can cut months off your payoff time and save on interest. Avoid taking on new debt while paying off existing balances.</p>
+                                <h4 className="text-base font-medium mb-2">Smart Debt Management for Young Adults</h4>
+                                <p className="text-sm">Focus on keeping credit card balances low or zero to avoid high interest. For student loans, understand your grace period and repayment options. Even paying just $25 extra per month on your credit card can cut months off your payoff time and save on interest. Avoid taking on new debt while paying off existing balances.</p>
                             </div>
                         </div>
                     )}
@@ -396,7 +396,7 @@ export function FinancialStrategy() {
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Recommended Asset Allocation</h4>
+                                    <h4 className="text-base font-medium mb-3">Recommended Asset Allocation</h4>
                                     <div className="h-[220px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
@@ -419,8 +419,8 @@ export function FinancialStrategy() {
                                         </ResponsiveContainer>
                                     </div>
 
-                                    <h4 className="text-sm font-medium mt-2 mb-2">Investment Growth Comparison</h4>
-                                    <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                                    <h4 className="text-base font-medium mt-2 mb-2">Investment Growth Comparison</h4>
+                                    <div className="grid grid-cols-3 gap-2 text-center text-sm">
                                         {stages[2].compareData.map((item, index) => (
                                             <div key={index} className="border rounded-md p-2">
                                                 <div className="font-medium">{item.amount}</div>
@@ -433,7 +433,7 @@ export function FinancialStrategy() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Investment Growth Projection</h4>
+                                    <h4 className="text-base font-medium mb-3">Investment Growth Projection</h4>
                                     <div className="h-[180px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={stages[2].growthData}>
@@ -446,8 +446,8 @@ export function FinancialStrategy() {
                                         </ResponsiveContainer>
                                     </div>
 
-                                    <h4 className="text-sm font-medium mt-6 mb-2">Pro Tips</h4>
-                                    <ul className="text-xs space-y-1 ml-5 list-disc">
+                                    <h4 className="text-base font-medium mt-6 mb-2">Pro Tips</h4>
+                                    <ul className="text-sm space-y-1 ml-5 list-disc">
                                         {stages[2].tips.map((tip, i) => (
                                             <li key={i}>{tip}</li>
                                         ))}
@@ -456,8 +456,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Early Investing Strategy</h4>
-                                <p className="text-xs">Starting to invest at 21 gives you a tremendous advantage, even with small amounts. Begin with just $25-50 monthly in a simple index fund through a Roth IRA. If your employer offers 401(k) matching, contribute enough to get the full match—it's free money. Your greatest asset is time, so a higher allocation to stocks is appropriate at your age.</p>
+                                <h4 className="text-base font-medium mb-2">Early Investing Strategy</h4>
+                                <p className="text-sm">Starting to invest at 21 gives you a tremendous advantage, even with small amounts. Begin with just $25-50 monthly in a simple index fund through a Roth IRA. If your employer offers 401(k) matching, contribute enough to get the full match—it's free money. Your greatest asset is time, so a higher allocation to stocks is appropriate at your age.</p>
                             </div>
                         </div>
                     )}
@@ -467,20 +467,20 @@ export function FinancialStrategy() {
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Financial Goals Progress</h4>
+                                    <h4 className="text-base font-medium mb-3">Financial Goals Progress</h4>
                                     {stages[3].progressData.map((item, index) => (
                                         <div key={index} className="mb-3">
                                             <div className="flex justify-between mb-1">
-                                                <span className="text-sm">{item.name}</span>
-                                                <span className="text-xs text-muted-foreground">${item.current.toLocaleString()} / ${item.target.toLocaleString()}</span>
+                                                <span className="text-base">{item.name}</span>
+                                                <span className="text-sm text-muted-foreground">${item.current.toLocaleString()} / ${item.target.toLocaleString()}</span>
                                             </div>
                                             <Progress value={(item.current / item.target) * 100} className="h-2" />
                                         </div>
                                     ))}
 
-                                    <h4 className="text-sm font-medium mt-4 mb-2">Life Milestones</h4>
+                                    <h4 className="text-base font-medium mt-4 mb-2">Life Milestones</h4>
                                     {stages[3].milestoneData.map((item, index) => (
-                                        <div key={index} className="flex items-center justify-between text-xs mb-2 border-b pb-2">
+                                        <div key={index} className="flex items-center justify-between text-sm mb-2 border-b pb-2">
                                             <div>
                                                 <div className="font-medium">{item.category}</div>
                                                 <div className="text-muted-foreground">{item.timeline}</div>
@@ -494,7 +494,7 @@ export function FinancialStrategy() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-sm font-medium mb-3">Recommended Spending</h4>
+                                    <h4 className="text-base font-medium mb-3">Recommended Spending</h4>
                                     <div className="h-[200px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
@@ -517,8 +517,8 @@ export function FinancialStrategy() {
                                         </ResponsiveContainer>
                                     </div>
 
-                                    <h4 className="text-sm font-medium mt-4 mb-2">Pro Tips</h4>
-                                    <ul className="text-xs space-y-1 ml-5 list-disc">
+                                    <h4 className="text-base font-medium mt-4 mb-2">Pro Tips</h4>
+                                    <ul className="text-sm space-y-1 ml-5 list-disc">
                                         {stages[3].tips.map((tip, i) => (
                                             <li key={i}>{tip}</li>
                                         ))}
@@ -527,8 +527,8 @@ export function FinancialStrategy() {
                             </div>
 
                             <div className="rounded-lg border p-3 bg-primary/5 mt-3">
-                                <h4 className="text-sm font-medium mb-2">Balanced Living for Young Adults</h4>
-                                <p className="text-xs">Financial success isn't just about saving—it's about living well while preparing for the future. Try the 50/30/20 budget: 50% for needs, 30% for wants, and 20% for savings and debt repayment. Set up separate funds for goals like travel or education. Use budgeting apps to track spending, and automate savings to make good habits effortless.</p>
+                                <h4 className="text-base font-medium mb-2">Balanced Living for Young Adults</h4>
+                                <p className="text-sm">Financial success isn't just about saving—it's about living well while preparing for the future. Try the 50/30/20 budget: 50% for needs, 30% for wants, and 20% for savings and debt repayment. Set up separate funds for goals like travel or education. Use budgeting apps to track spending, and automate savings to make good habits effortless.</p>
                             </div>
                         </div>
                     )}

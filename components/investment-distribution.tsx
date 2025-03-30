@@ -32,7 +32,7 @@ export function InvestmentDistribution() {
   }
 
   return (
-    <div className="h-[300px] w-full">
+    <div className="h-[350px] w-full">
       <ChartContainer
         config={{
           stocks: {

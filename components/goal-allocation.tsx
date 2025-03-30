@@ -56,7 +56,7 @@ export function GoalAllocation() {
     return (
       <g>
         <text
-          x={x + width - 5}
+          x={x + width + 40}
           y={y + 10}
           fill="#fff"
           textAnchor="end"
@@ -66,7 +66,7 @@ export function GoalAllocation() {
           ${value.toLocaleString()}
         </text>
         <text
-          x={x + width - 5}
+          x={x + width + 55}
           y={y + 25}
           fill="#fff"
           textAnchor="end"
