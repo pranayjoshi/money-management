@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast"
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig"
 
 export default function PersonalDetails() {
@@ -135,10 +135,19 @@ export default function PersonalDetails() {
     };
 
     try {
-        // Save data to Firestore
-        console.log("wadaw")
-        await setDoc(doc(db, "users", "userId"), dataToSave); // Replace "userId" with the actual user ID
-        console.log("wadaw")
+        // Get the current document
+        const docRef = doc(db, "users", "userId");
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            // If document exists, update only the fields from the form
+            // instead of replacing the entire document
+            await updateDoc(docRef, dataToSave);
+        } else {
+            // If document doesn't exist, create a new one
+            await setDoc(docRef, dataToSave);
+        }
+        
         toast({
             title: "Profile updated",
             description: "Your personal details have been saved successfully.",

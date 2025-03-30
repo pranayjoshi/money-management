@@ -15,6 +15,9 @@ import { AddGoalDialog } from "@/components/add-goal-dialog"
 import UserForm from "./pushtofb"
 import { FundBifurcation } from "./fund-bifurcation"
 import { ExpenseBreakdown } from "./expense-breakdown"
+import { getRiskFactor } from "@/lib/risk"
+import { getEmergencyFund } from "@/lib/emergency"
+import { POST } from "@/app/api/hello/route"
 
 interface Goal {
   title: string
@@ -30,8 +33,49 @@ interface Goal {
 export default function Dashboard() {
   const [greeting, setGreeting] = useState("Good afternoon")
   const [goals, setGoals] = useState<Goal[]>([])
+  const [emergencyFundValue, setEmergencyFundValue] = useState<number | null>(null);
+  const [riskFactorValue, setRiskFactorValue] = useState<number | null>(null);
+  const [savingAccountValue, setSavingAccountValue] = useState<number | null>(null);
+  const [checkingAccountValue, setCheckingAccountValue] = useState<number | null>(null);
 
   useEffect(() => {
+    async function fetchData() {
+      const value = await getEmergencyFund("userId"); // Replace "userId" with the actual user ID
+      setEmergencyFundValue(value);
+      const riskFactor = await getRiskFactor("userId"); // Replace "userId" with the actual user ID
+      setRiskFactorValue(riskFactor);
+      try {
+        const docRef = doc(db, "users", "userId");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const riskFactor = userData.riskFactor;
+            const savingsRiskFactor = userData.savingsRiskFactor;
+            console.log(userData.annualizedIncome)
+            const totalAmount = userData.annualizedIncome - userData.checkingAmount
+            setCheckingAccountValue(userData.checkingAmount)
+            setSavingAccountValue(totalAmount)
+            setEmergencyFundValue(userData.emergencyFund)
+            console.log(riskFactor, totalAmount)
+
+            // Check if savingsRiskFactor does not exist or does not match RiskFactor
+            if (savingsRiskFactor === undefined || savingsRiskFactor !== riskFactor) {
+                // Call the API to execute the POST function
+                console.log("Executing POST function because savingsRiskFactor is missing or does not match RiskFactor.");
+                await callPostApi(riskFactor, totalAmount, "userId"); // Replace 10000 with the actual principal amount and "userId" with the actual user ID
+            }
+            else {
+              console.log("no work!")
+            }
+        } else {
+            console.log("No such document!");
+        }
+    } catch (error) {
+        console.error("Error checking and running command:", error);
+    }
+    }
+    fetchData();
     async function fetchGoals() {
       try {
         const docRef = doc(db, "users", "userId") // Replace "userId" with the actual user ID
@@ -63,11 +107,35 @@ export default function Dashboard() {
     fetchGoals()
   }, [])
 
+  const callPostApi = async (riskFactor: number, principalAmount: number, userId: string) => {
+    try {
+      const response = await fetch('/api/hello', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          riskFactor,
+          principalAmount,
+          userId
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to execute POST function');
+      }
+
+      console.log('POST function executed successfully');
+    } catch (error) {
+      console.error('Error executing POST function:', error);
+    }
+  };
+
   // In a real app, this would come from an API or state management
   const accounts = [
-    { name: "Checking Account", balance: 2543.87, type: "checking" },
-    { name: "Savings Account", balance: 12750.52, type: "savings" },
-    { name: "Emergency Fund", balance: 5000.0, type: "savings" },
+    { name: "Checking Account", balance: checkingAccountValue ?? 0, type: "checking" },
+    { name: "Savings Account", balance: savingAccountValue ?? 0, type: "savings" },
+    { name: "Emergency Fund", balance: emergencyFundValue ?? 0, type: "savings" },
   ]
 
   const handleAddGoal = async (goal: Goal) => {

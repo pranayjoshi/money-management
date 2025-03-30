@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, Clock, Award, CreditCard, Coins, TrendingUp, HeartHandshake, Ban } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,10 +9,67 @@ import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from "@/lib/firebaseConfig";
 
 export function FinancialStrategy() {
+    const [allocationData, setAllocationData] = useState([
+        { name: "Stocks (0%)", value: 0, fill: "#8884d8" },
+        { name: "Bonds (0%)", value: 0, fill: "#82ca9d" },
+        { name: "ETFs (0%)", value: 0, fill: "#ffc658" },
+        { name: "Crypto (0%)", value: 0, fill: "#ff8042" }
+    ]);
+    
     const [currentStage, setCurrentStage] = useState(1)
     const [selectedStage, setSelectedStage] = useState(1)
+
+    // Fetch user data when component mounts
+    useEffect(() => {
+        async function fetchUserInvestmentData() {
+            try {
+                // Replace 'userId' with the actual user ID (from auth or props)
+                const userId = "userId"; // Get this from your auth context or props
+                
+                const userDocRef = doc(db, "users", userId);
+                const userDoc = await getDoc(userDocRef);
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    // Update the allocation data with values from Firestore
+                    setAllocationData([
+                        { 
+                            name: `Stocks (${userData.stocksPercentage}%)`, 
+                            value: userData.stocksPercentage, 
+                            fill: "#8884d8" 
+                        },
+                        { 
+                            name: `Bonds (${userData.bondsPercentage}%)`, 
+                            value: userData.bondsPercentage, 
+                            fill: "#82ca9d" 
+                        },
+                        { 
+                            name: `ETFs (${userData.ETFsPercentage}%)`, 
+                            value: userData.ETFsPercentage, 
+                            fill: "#ffc658" 
+                        },
+                        { 
+                            name: `Crypto (${userData.cryptoPercentage}%)`, 
+                            value: userData.cryptoPercentage, 
+                            fill: "#ff8042" 
+                        }
+                    ]);
+                    
+                    console.log("User investment data loaded:", userData);
+                } else {
+                    console.log("No such user document!");
+                }
+            } catch (error) {
+                console.error("Error fetching user investment data:", error);
+            }
+        }
+        
+        fetchUserInvestmentData();
+    }, []); // Empty dependency array means this runs once when component mounts
 
     // Financial strategy stages
     const stages = [
@@ -83,11 +140,8 @@ export function FinancialStrategy() {
             description: "Begin building wealth through smart investments",
             completed: false,
             icon: <TrendingUp className="h-5 w-5" />,
-            allocationData: [
-                { name: "Stocks (80%)", value: 80, fill: "#8884d8" },
-                { name: "Bonds (10%)", value: 10, fill: "#82ca9d" },
-                { name: "Cash (10%)", value: 10, fill: "#ffc658" }
-            ],
+            // Using the state variable instead of hardcoded data
+            get allocationData() { return allocationData; },
             growthData: [
                 { year: 0, value: 0 },
                 { year: 5, value: 3600 },
@@ -343,20 +397,20 @@ export function FinancialStrategy() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <h4 className="text-sm font-medium mb-3">Recommended Asset Allocation</h4>
-                                    <div className="h-[200px]">
+                                    <div className="h-[220px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
                                                 <Pie
-                                                    data={stages[2].allocationData}
+                                                    data={allocationData}
                                                     cx="50%"
                                                     cy="50%"
                                                     labelLine={false}
                                                     outerRadius={80}
                                                     fill="#8884d8"
                                                     dataKey="value"
-                                                    label={({ name, percent }) => `${name}`}
+                                                    label={({ name }) => `${name}`}
                                                 >
-                                                    {stages[2].allocationData.map((entry, index) => (
+                                                    {allocationData.map((entry, index) => (
                                                         <Cell key={`cell-${index}`} fill={entry.fill} />
                                                     ))}
                                                 </Pie>

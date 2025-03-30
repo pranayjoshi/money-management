@@ -1,31 +1,72 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Bot, RefreshCw } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Bot, RefreshCw } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { db } from "@/lib/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 
 export function AIInvestmentSuggestions() {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<
+    { category: string; percentage: number; description: string }[]
+  >([]);
 
-  // Mock data for investment suggestions
-  const suggestions = [
-    { category: "Stocks", percentage: 40, description: "Focus on blue-chip and growth stocks" },
-    { category: "ETFs", percentage: 30, description: "Index funds for diversification" },
-    { category: "Bonds", percentage: 15, description: "Government and corporate bonds" },
-    { category: "Crypto", percentage: 10, description: "Limited exposure to established cryptocurrencies" },
-    // { category: "Cash", percentage: 5, description: "Emergency liquidity" },
-  ]
+  useEffect(() => {
+    async function fetchInvestmentSuggestions() {
+      try {
+        // Replace 'userId' with the actual user ID (from auth or props)
+        const userId = "userId"; // Get this from your auth context or props
+
+        const userDocRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          // Update the suggestions with values from Firestore
+          setSuggestions([
+            {
+              category: "Stocks",
+              percentage: userData.stocksPercentage || 0,
+              description: "Focus on blue-chip and growth stocks",
+            },
+            {
+              category: "ETFs",
+              percentage: userData.ETFsPercentage || 0,
+              description: "Index funds for diversification",
+            },
+            {
+              category: "Bonds",
+              percentage: userData.bondsPercentage || 0,
+              description: "Government and corporate bonds",
+            },
+            {
+              category: "Crypto",
+              percentage: userData.cryptoPercentage || 0,
+              description: "Limited exposure to established cryptocurrencies",
+            },
+          ]);
+        } else {
+          console.log("No such user document!");
+        }
+      } catch (error) {
+        console.error("Error fetching investment suggestions:", error);
+      }
+    }
+
+    fetchInvestmentSuggestions();
+  }, []);
 
   const handleRefresh = () => {
-    setLoading(true)
+    setLoading(true);
     // Simulate API call
     setTimeout(() => {
-      setLoading(false)
-    }, 1500)
-  }
+      setLoading(false);
+    }, 1500);
+  };
 
   return (
     <div className="space-y-4">
@@ -59,6 +100,5 @@ export function AIInvestmentSuggestions() {
         </p>
       </div>
     </div>
-  )
+  );
 }
-

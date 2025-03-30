@@ -1,7 +1,7 @@
 // risk.ts
 
 import { db } from './firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 interface FinancialGoals {
     [goal: string]: number; // goal name -> timeframe in years
@@ -170,6 +170,11 @@ interface FinancialGoals {
     if (data) {
       const riskFactor = calculateRiskFactor(data.name, data.age, data.income, data.incomeStability, data.monthlyExpenditure, data.dependents, data.debt, data.medicalConditions, data.financialGoals);
       console.log("Calculated Risk Factor: ", riskFactor.rawRiskScore);
+      
+      // Update the riskFactor field in the user's document
+      const docRef = doc(db, "users", userId);
+      await updateDoc(docRef, { riskFactor: riskFactor.rawRiskScore });
+      
       return riskFactor.rawRiskScore;
     }
     return 0; // Return a default value if data is not available

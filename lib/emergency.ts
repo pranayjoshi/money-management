@@ -1,5 +1,5 @@
 import { db } from './firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 
 interface EmergencyFundFactors {
@@ -75,6 +75,8 @@ async function fetchEmergencyFundData(userId: string) {
     if (data) {
       const emergencyFund = calculateEmergencyFund(data);
       console.log("Calculated Emergency Fund: $", emergencyFund);
+      const docRef = doc(db, "users", userId);
+      await updateDoc(docRef, { emergencyFund: emergencyFund });
       return emergencyFund;
     }
     return 0; // Return a default value if data is not available

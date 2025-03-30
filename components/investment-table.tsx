@@ -12,26 +12,13 @@ interface InvestmentTableProps {
 }
 
 export function InvestmentTable({ type }: InvestmentTableProps) {
-  const [emergencyFundValue, setEmergencyFundValue] = useState<number | null>(null);
-  const [riskFactorValue, setRiskFactorValue] = useState<number | null>(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      const value = await getEmergencyFund("userId"); // Replace "userId" with the actual user ID
-      setEmergencyFundValue(value);
-      const riskFactor = await getRiskFactor("userId"); // Replace "userId" with the actual user ID
-      setRiskFactorValue(riskFactor);
-    }
-    
-
-    fetchData();
-  }, []);
+  
   // Mock data for different investment types
   const investments = {
     stocks: [
       { name: "Apple Inc.", symbol: "AAPL", value: 3250.75, change: 2.4 },
-      { name: "Microsoft", symbol: "MSFT", value: riskFactorValue ?? 0, change: 1.2 },
-      { name: "Tesla", symbol: "TSLA", value: emergencyFundValue ?? 0, change: -3.1 },
+      { name: "Microsoft", symbol: "MSFT", value: 1000, change: 1.2 },
+      { name: "Tesla", symbol: "TSLA", value: 2000, change: -3.1 },
     ],
     crypto: [
       { name: "Bitcoin", symbol: "BTC", value: 1200.0, change: 5.7 },
