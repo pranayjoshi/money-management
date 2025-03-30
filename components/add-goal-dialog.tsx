@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Target, Landmark, Percent } from "lucide-react"
+import { Target, Landmark, Percent, AlertCircle } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface AddGoalDialogProps {
     onAddGoal: (goal: {
@@ -40,6 +41,7 @@ interface AddGoalDialogProps {
 
 export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
     const [open, setOpen] = useState(false)
+    const [showWarning, setShowWarning] = useState(false)
     const [goalName, setGoalName] = useState("")
     const [goalAmount, setGoalAmount] = useState("")
     const [selectedYear, setSelectedYear] = useState("")
@@ -50,8 +52,38 @@ export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
     const [isRecurring, setIsRecurring] = useState(false)
     const [priority, setPriority] = useState(50)
 
-    const handleSubmit = () => {
+    const checkFeasibility = async () => {
+        try {
+            const response = await fetch('/api/goal-feasibility', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    targetAmount: parseFloat(goalAmount),
+                    initialDeposit: parseFloat(initialDeposit) || 0,
+                    interestRate: parseFloat(interestRate),
+                    monthYear: `${selectedMonth} ${selectedYear}`
+                }),
+            })
+
+            const data = await response.json()
+            return data.feasibility === 'feasible'
+        } catch (error) {
+            console.error('Error checking goal feasibility:', error)
+            return false
+        }
+    }
+
+    const handleSubmit = async () => {
         if (!selectedYear || !selectedMonth) return
+
+        const isFeasible = await checkFeasibility()
+
+        if (!isFeasible) {
+            setShowWarning(true)
+            return
+        }
 
         onAddGoal({
             name: goalName,
@@ -78,6 +110,7 @@ export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
         setGoalCategory("")
         setIsRecurring(false)
         setPriority(50)
+        setShowWarning(false)
     }
 
     const currentYear = new Date().getFullYear()
@@ -121,6 +154,14 @@ export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
                         Set up a new financial goal to track your progress toward what matters to you.
                     </DialogDescription>
                 </DialogHeader>
+                {showWarning && (
+                    <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>
+                            This goal may not be feasible with the current parameters. Please review your inputs and try again.
+                        </AlertDescription>
+                    </Alert>
+                )}
                 <div className="grid gap-4 py-4">
                     <div className="grid gap-2">
                         <Label htmlFor="goal-name">Goal Name</Label>
