@@ -37,13 +37,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Analytics
             </Link>
             <Link
-              href="/transactions"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-primary"
-            >
-              <CreditCard className="h-5 w-5" />
-              Transactions
-            </Link>
-            <Link
               href="/details"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-primary"
             >
