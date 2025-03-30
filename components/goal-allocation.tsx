@@ -1,45 +1,36 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-
+import { db } from "@/lib/firebaseConfig"
+import { doc, getDoc } from "firebase/firestore"
 import { ChartContainer } from "@/components/ui/chart"
 
 export function GoalAllocation() {
-  // Mock data for goals
-  const goals = [
-    {
-      name: "New Car",
-      value: 7500,
-      percentage: 21,
-      color: "hsl(var(--chart-1))",
-    },
-    {
-      name: "Vacation",
-      value: 2100,
-      percentage: 6,
-      color: "hsl(var(--chart-2))",
-    },
-    {
-      name: "Home Down Payment",
-      value: 12500,
-      percentage: 35,
-      color: "hsl(var(--chart-3))",
-    },
-    {
-      name: "Emergency Fund",
-      value: 9000,
-      percentage: 25,
-      color: "hsl(var(--chart-4))",
-    },
-    {
-      name: "Wedding",
-      value: 5000,
-      percentage: 14,
-      color: "hsl(var(--chart-5))",
-    },
-  ]
+  const [goals, setGoals] = useState<any[]>([])
 
-  const totalAllocated = goals.reduce((sum, item) => sum + item.value, 0)
+  useEffect(() => {
+    async function fetchGoals() {
+      try {
+        const docRef = doc(db, "users", "userId") // Replace "userId" with the actual user ID
+        const docSnap = await getDoc(docRef)
+
+        if (docSnap.exists()) {
+          const data = docSnap.data()
+          const fetchedGoals = data.goals || []
+          setGoals(fetchedGoals)
+        } else {
+          console.log("No such document!")
+        }
+      } catch (error) {
+        console.error("Error fetching goals: ", error)
+      }
+    }
+
+    fetchGoals()
+  }, [])
+
+  const totalAllocated = goals.reduce((sum, item) => sum + item.current_val, 0)
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
@@ -47,9 +38,9 @@ export function GoalAllocation() {
       const data = payload[0].payload
       return (
         <div className="bg-card p-3 border rounded-md shadow-md">
-          <p className="font-medium text-sm">{data.name}</p>
+          <p className="font-medium text-sm">{data.title}</p>
           <p className="text-primary text-sm">
-            ${data.value.toLocaleString()} <span className="text-muted-foreground">({data.percentage}%)</span>
+            ${data.current_val.toLocaleString()} <span className="text-muted-foreground">({(data.current_val / data.total_val * 100).toFixed(2)}%)</span>
           </p>
         </div>
       )
@@ -82,7 +73,7 @@ export function GoalAllocation() {
           dominantBaseline="middle"
           className="text-xs opacity-80"
         >
-          {item.percentage}%
+          {(item.current_val / item.total_val * 100).toFixed(2)}%
         </text>
       </g>
     )
@@ -90,53 +81,28 @@ export function GoalAllocation() {
 
   return (
     <div className="h-[300px] w-full">
-      <ChartContainer
-        config={{
-          car: {
-            label: "New Car",
-            color: "hsl(var(--chart-1))",
-          },
-          vacation: {
-            label: "Vacation",
-            color: "hsl(var(--chart-2))",
-          },
-          home: {
-            label: "Home Down Payment",
-            color: "hsl(var(--chart-3))",
-          },
-          emergency: {
-            label: "Emergency Fund",
-            color: "hsl(var(--chart-4))",
-          },
-          wedding: {
-            label: "Wedding",
-            color: "hsl(var(--chart-5))",
-          },
-        }}
-      >
+      <ChartContainer config={{}}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={goals} layout="vertical" margin={{ top: 10, right: 30, left: 0, bottom: 30 }}>
             <XAxis type="number" hide />
             <YAxis
-              dataKey="name"
+              dataKey="title"
               type="category"
-              axisLine={false}
+              axisLine={true}
               tickLine={false}
               width={120}
               tick={{ fontSize: 12 }}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="value" radius={4} barSize={30}>
+            <Bar dataKey="current_val" radius={4} barSize={30}>
               {goals.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${index + 1}))`} />
               ))}
-              <LabelList dataKey="value" content={renderCustomizedLabel} />
+              <LabelList dataKey="current_val" content={renderCustomizedLabel} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </ChartContainer>
-      <div className="text-center text-sm mt-2 font-medium">Total Allocated: ${totalAllocated.toLocaleString()}</div>
     </div>
   )
 }
-

@@ -14,17 +14,17 @@ import { AddGoalDialog } from "@/components/add-goal-dialog"
 
 export default function InvestmentsGoalsContent() {
     const handleAddGoal = (goal: {
-        name: string
-        target: number
-        date: string
-        current: number
-        category: string
-        isRecurring: boolean
-        priority: number
-        interestRate: number
-      }) => {
+        title: string;
+        total_val: number;
+        current_val: number;
+        date: string;
+        category: string;
+        isRecurring: boolean;
+        priority: number;
+        interestRate: number;
+    }) => {
         // setGoals([...goals, goal])
-      }
+    }
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex items-center justify-between">

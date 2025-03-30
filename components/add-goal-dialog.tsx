@@ -28,14 +28,14 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface AddGoalDialogProps {
     onAddGoal: (goal: {
-        name: string
-        target: number
+        title: string
+        total_val: number
+        current_val: number
         date: string
-        current: number
-        interestRate: number
         category: string
         isRecurring: boolean
         priority: number
+        interestRate: number
     }) => void
 }
 
@@ -86,14 +86,14 @@ export function AddGoalDialog({ onAddGoal }: AddGoalDialogProps) {
         }
 
         onAddGoal({
-            name: goalName,
-            target: parseFloat(goalAmount),
+            title: goalName,
+            total_val: parseFloat(goalAmount),
+            current_val: parseFloat(initialDeposit) || 0,
             date: `${selectedMonth} ${selectedYear}`,
-            current: parseFloat(initialDeposit) || 0,
-            interestRate: parseFloat(interestRate),
             category: goalCategory,
             isRecurring,
-            priority
+            priority,
+            interestRate: parseFloat(interestRate)
         })
 
         resetForm()

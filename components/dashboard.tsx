@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { CreditCard, Plus, Target } from "lucide-react"
+import { db } from "@/lib/firebaseConfig"
+import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,9 +17,9 @@ import { FundBifurcation } from "./fund-bifurcation"
 import { ExpenseBreakdown } from "./expense-breakdown"
 
 interface Goal {
-  name: string
-  target: number
-  current: number
+  title: string
+  total_val: number
+  current_val: number
   date: string
   category: string
   isRecurring: boolean
@@ -27,38 +29,39 @@ interface Goal {
 
 export default function Dashboard() {
   const [greeting, setGreeting] = useState("Good afternoon")
-  const [goals, setGoals] = useState<Goal[]>([
-    {
-      name: "New Car",
-      target: 15000,
-      current: 7500,
-      date: "Dec 2025",
-      category: "car",
-      isRecurring: true,
-      priority: 75,
-      interestRate: 5.5
-    },
-    {
-      name: "Vacation",
-      target: 3000,
-      current: 2100,
-      date: "Aug 2025",
-      category: "vacation",
-      isRecurring: false,
-      priority: 50,
-      interestRate: 0
-    },
-    {
-      name: "Home Down Payment",
-      target: 50000,
-      current: 12500,
-      date: "Jan 2027",
-      category: "home",
-      isRecurring: true,
-      priority: 100,
-      interestRate: 3.5
-    },
-  ])
+  const [goals, setGoals] = useState<Goal[]>([])
+
+  useEffect(() => {
+    async function fetchGoals() {
+      try {
+        const docRef = doc(db, "users", "userId") // Replace "userId" with the actual user ID
+        const docSnap = await getDoc(docRef)
+
+        if (docSnap.exists()) {
+          const data = docSnap.data()
+          const fetchedGoals = data.goals || []
+          // Transform the data to match our interface
+          const transformedGoals = fetchedGoals.map((goal: any) => ({
+            title: goal.name || goal.title,
+            total_val: goal.target || goal.total_val,
+            current_val: goal.current || goal.current_val,
+            date: goal.date,
+            category: goal.category,
+            isRecurring: goal.isRecurring,
+            priority: goal.priority,
+            interestRate: goal.interestRate
+          }))
+          setGoals(transformedGoals)
+        } else {
+          console.log("No such document!")
+        }
+      } catch (error) {
+        console.error("Error fetching goals: ", error)
+      }
+    }
+
+    fetchGoals()
+  }, [])
 
   // In a real app, this would come from an API or state management
   const accounts = [
@@ -67,17 +70,29 @@ export default function Dashboard() {
     { name: "Emergency Fund", balance: 5000.0, type: "savings" },
   ]
 
-  const handleAddGoal = (goal: {
-    name: string
-    target: number
-    date: string
-    current: number
-    category: string
-    isRecurring: boolean
-    priority: number
-    interestRate: number
-  }) => {
-    setGoals([...goals, goal])
+  const handleAddGoal = async (goal: Goal) => {
+    try {
+      const docRef = doc(db, "users", "userId") // Replace "userId" with actual user ID
+      const docSnap = await getDoc(docRef)
+      
+      if (docSnap.exists()) {
+        const currentGoals = docSnap.data().goals || []
+        await updateDoc(docRef, {
+          goals: [...currentGoals, goal]
+        })
+        
+        // Update local state after successful Firestore update
+        setGoals(prevGoals => [...prevGoals, goal])
+      } else {
+        // If document doesn't exist, create it with the first goal
+        await setDoc(docRef, {
+          goals: [goal]
+        })
+        setGoals([goal])
+      }
+    } catch (error) {
+      console.error("Error adding goal: ", error)
+    }
   }
 
   const getPriorityColor = (priority: number) => {
@@ -86,8 +101,8 @@ export default function Dashboard() {
     return "text-green-500"
   }
 
-  const calculateProgress = (current: number, target: number) => {
-    return Math.min(Math.round((current / target) * 100), 100)
+  const calculateProgress = (current_val: number, total_val: number) => {
+    return Math.min(Math.round((current_val / total_val) * 100), 100)
   }
 
   return (
@@ -129,11 +144,11 @@ export default function Dashboard() {
           <AddGoalDialog onAddGoal={handleAddGoal} />
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {goals.map((goal) => (
-            <Card key={goal.name}>
+          {goals.map((goal, index) => (
+            <Card key={index}>
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium">{goal.name}</CardTitle>
+                  <CardTitle className="text-sm font-medium">{goal.title}</CardTitle>
                   <div className="flex items-center gap-2">
                     <span className={`text-xs font-medium ${getPriorityColor(goal.priority)}`}>
                       {goal.priority >= 75 ? "High" : goal.priority >= 50 ? "Medium" : "Low"} Priority
@@ -142,19 +157,19 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <CardDescription>
-                  Target: ${goal.target.toLocaleString()} by {goal.date}
+                  Target: ${goal.total_val.toLocaleString()} by {goal.date}
                   {goal.isRecurring && " • Recurring"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">${goal.current.toLocaleString()}</span>
-                  <span className="text-sm text-muted-foreground">${goal.target.toLocaleString()}</span>
+                  <span className="text-sm font-medium">${goal.current_val.toLocaleString()}</span>
+                  <span className="text-sm text-muted-foreground">${goal.total_val.toLocaleString()}</span>
                 </div>
-                <Progress value={calculateProgress(goal.current, goal.target)} className="mt-2" />
+                <Progress value={calculateProgress(goal.current_val, goal.total_val)} className="mt-2" />
                 <div className="mt-2 flex items-center justify-between">
                   <p className="text-xs text-muted-foreground">
-                    {calculateProgress(goal.current, goal.target)}% complete
+                    {calculateProgress(goal.current_val, goal.total_val)}% complete
                   </p>
                   {goal.interestRate > 0 && (
                     <p className="text-xs text-muted-foreground">
